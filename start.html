@@ -1,288 +1,205 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>גלריה של שירים ומנגינות - יובל שני</title>
   <style>
-    :root{--bg:#0b1220;--card:#0f1724;--muted:#9fb0c3;--accent:#4cc9f0;--text:#eef6fb}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);direction:rtl}
-    .wrap{max-width:1100px;margin:0 auto;padding:12px}
-    header{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    h1{margin:0;font-size:1.3rem}
-    p.muted{color:var(--muted);margin:6px 0 14px}
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; }
 
-    /* גלריה */
-    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-    figure.card{background:var(--card);padding:8px;border-radius:12px;margin:0}
-    a.thumb{display:block;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#07101a}
-    a.thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    figcaption.caption{margin-top:8px;font-size:.9rem;color:var(--text);display:flex;flex-direction:column;gap:6px}
-    a.ytlink{color:var(--accent);text-decoration:none;font-size:.9rem}
+    /* גלריה: תמיד שתי תמונות בשורה */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* שתי עמודות תמיד */
+      gap: 16px;
+      padding: 16px;
+      align-items: start;
+    }
+
+    .gallery-item { text-align: center; background: #fff; padding: 8px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .gallery img { width: 100%; height: auto; cursor: pointer; border-radius: 8px; display: block; }
+    .gallery .title { margin-top: 8px; font-size: 0.95rem; color: #222; }
+    .gallery a.yt { display: inline-block; margin-top: 8px; color: #e62117; text-decoration: none; font-weight: 600; }
+
+    /* אופציונלי: אם תרצה שגאב גדול יותר במסכים רחבים */
+    @media (min-width: 1200px) {
+      .gallery { gap: 20px; }
+    }
 
     /* Lightbox */
-    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,12,.9);z-index:9999;padding:16px}
-    .lightbox.show{display:flex}
-    .lb-inner{width:100%;max-width:1100px;display:flex;flex-direction:column;align-items:center}
-    .lb-media{position:relative;display:flex;align-items:center;justify-content:center;width:100%}
-    #lbImg{max-width:100%;max-height:75vh;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.6)}
-    .lb-controls{margin-top:10px;display:flex;gap:8px;align-items:center}
-    .btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer}
-    .navLeft,.navRight{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.04);border-radius:999px;padding:8px;font-size:1.4rem;cursor:pointer}
-    .navLeft{left:8px}
-    .navRight{right:8px}
-    .topButtons{position:fixed;top:10px;left:10px;display:flex;gap:8px}
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); display: none; align-items: center; justify-content: center; z-index: 1000; }
+    .lightbox.show { display:flex; }
+    .lb-inner { width: 100%; max-width: 1100px; padding: 16px; box-sizing: border-box; text-align: center; }
+    .lb-img { max-width: 100%; max-height: 80vh; border-radius: 10px; touch-action: none; transition: transform .15s linear; }
+    .lb-close { position: absolute; top: 14px; left: 14px; font-size: 26px; color: #fff; cursor: pointer; }
+    .nav-left, .nav-right { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 32px; cursor: pointer; user-select:none; }
+    .nav-left { left: 12px; }
+    .nav-right { right: 12px; }
 
-    .lb-title{margin-top:8px;font-weight:600}
-
-    @media(max-width:600px){
-      .gallery{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));}
-      .navLeft,.navRight{font-size:1.1rem;padding:6px}
-      #lbImg{max-height:65vh}
-      .btn{padding:7px 9px}
+    @media (max-width: 420px) {
+      /* במכשירים מאוד קטנים שקטין קצת המרווח כדי שהעמודה תהיה פחות דחוקה */
+      .gallery { gap: 10px; padding: 10px; }
+      .nav-left, .nav-right { font-size: 26px; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+
     <header>
-      <h1>יובל שני</h1>
+      <h1><a href='https://www.youtube.com/@%D7%99%D7%95%D7%91%D7%9C%D7%A9%D7%A0%D7%99-%D7%A09%D7%A6'>הקלק - ערוץ יובל שני ביוטיוב</a></h1>
     </header>
     <p class="muted">15 שירים עם קישורים ליוטיוב לשמיעת המנגינה , לחץ על התמונה ובתחתית המסך יופיע לינק ליוטיוב</p>
 
-    <main>
-      <section class="gallery" id="gallery" aria-live="polite"></section>
-    </main>
-  </div>
+  <div class="gallery" id="gallery"></div>
 
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox" role="dialog" aria-hidden="true">
-    <div class="topButtons">
-      <button id="lbFullscreen" class="btn" title="מסך מלא">⛶</button>
-      <button id="lbShare" class="btn" title="שתף">📤</button>
-      <button id="lbClose" class="btn" title="סגור">✕</button>
-    </div>
+  <div class="lightbox" id="lightbox" role="dialog" aria-hidden="true">
+    <div class="lb-close" id="lbClose">✕</div>
+    <div class="nav-left" id="lbPrev">❮</div>
+    <div class="lb-right" id="lbNext">❯</div>
 
     <div class="lb-inner">
-      <div class="lb-media">
-        <button id="lbPrev" aria-label="הקודם" class="navLeft">❮</button>
-        <img id="lbImg" alt="" />
-        <button id="lbNext" aria-label="הבא" class="navRight">❯</button>
-      </div>
-
-      <div class="lb-title" id="lbTitle"></div>
-      <div class="lb-info" style="display:flex;gap:10px;align-items:center;margin-top:8px;">
-        <a id="lbYoutube" class="ytlink" target="_blank" rel="noopener" style="display:none">🎵 צפה ביוטיוב</a>
-        <a id="lbDownload" class="btn" download>⬇️ הורד תמונה</a>
-      </div>
+      <img id="lbImg" class="lb-img" src="" alt="" />
+      <div id="lbTitle" style="color:#fff;margin-top:8px;font-weight:600"></div>
+      <a id="lbYoutube" class="yt" target="_blank" rel="noopener" style="display:none"></a>
     </div>
   </div>
 
-<script>
-// ---- DATA: מערך אובייקטים עם תמונה, כותרת וקישור יוטיוב ----
-const IMAGES = [
-  { src: 'hebimg/שיר 1 רסיסים.jpeg', title: 'רסיסים', youtube: 'https://www.youtube.com/watch?v=3Sdku7GWczM' },
-  { src: 'hebimg/שיר 2 נפרם.jpeg', title: 'נפרם', youtube: 'https://www.youtube.com/watch?v=6GmeCeR3O50' },
-  { src: 'hebimg/שיר 3 זכרונות.jpeg', title: 'זכרונות', youtube: 'https://www.youtube.com/watch?v=0j7W70j5TD8' },
-  { src: 'hebimg/שיר 4 פחם.jpeg', title: 'פחם', youtube: 'https://www.youtube.com/watch?v=Pzd4Cx8zlrI' },
-  { src: 'hebimg/שיר 5 לילות סוף דצמבר.jpeg', title: 'לילות סוף דצמבר', youtube: 'https://www.youtube.com/watch?v=DiWa8HPeQXw' },
-  { src: 'hebimg/שיר 6 פילוסופי.jpeg', title: 'פילוסופי', youtube: 'https://www.youtube.com/watch?v=rxJs23JhkJk' },
-  { src: 'hebimg/שיר 7 מטעני נפש.jpeg', title: 'מטעני נפש', youtube: 'https://www.youtube.com/watch?v=SqmP-RugiaA' },
-  { src: 'hebimg/שיר 8 געגוע.jpeg', title: 'געגוע', youtube: 'https://www.youtube.com/watch?v=AuBYHt3SVRQ' },
-  { src: 'hebimg/שיר 9 על הקצה.jpeg', title: 'על הקצה', youtube: 'https://www.youtube.com/watch?v=uBxgQCTZWiI' },
-  { src: 'hebimg/שיר 10 עיניים.jpeg', title: 'עיניים', youtube: 'https://www.youtube.com/watch?v=KcRHRN410pg' },
-  { src: 'hebimg/שיר 11 נפש אחת.jpeg', title: 'נפש אחת', youtube: 'https://www.youtube.com/watch?v=qZKBuhphuwM' },
-  { src: 'hebimg/שיר 12 היום אתה מלאך.jpeg', title: 'היום אתה מלאך', youtube: 'https://www.youtube.com/watch?v=kLQ-6d9eyng' },
-  { src: 'hebimg/שיר 13 שיחות נפש.jpeg', title: 'שיחות נפש', youtube: 'https://www.youtube.com/watch?v=ER0vo-Ut_xs' },
-  { src: 'hebimg/שיר 14 פוסט תמונה.jpeg', title: 'פוסט תמונה', youtube: 'https://www.youtube.com/watch?v=foM7Zdp0q70' },
-  { src: 'hebimg/שיר 15 נמר סגול.jpeg', title: 'נמר סגול', youtube: 'https://www.youtube.com/watch?v=j-k6BIihbHI' },
- ];
+  <script>
+    // דוגמה לנתונים - החלף בנתונים שלך
+	 const IMAGES = [
+	  { src: 'hebimg/שיר 1 רסיסים.jpeg', title: 'רסיסים', youtube: 'https://www.youtube.com/watch?v=3Sdku7GWczM' },
+	  { src: 'hebimg/שיר 2 נפרם.jpeg', title: 'נפרם', youtube: 'https://www.youtube.com/watch?v=6GmeCeR3O50' },
+	  { src: 'hebimg/שיר 3 זכרונות.jpeg', title: 'זכרונות', youtube: 'https://www.youtube.com/watch?v=0j7W70j5TD8' },
+	  { src: 'hebimg/שיר 4 פחם.jpeg', title: 'פחם', youtube: 'https://www.youtube.com/watch?v=Pzd4Cx8zlrI' },
+	  { src: 'hebimg/שיר 5 לילות סוף דצמבר.jpeg', title: 'לילות סוף דצמבר', youtube: 'https://www.youtube.com/watch?v=DiWa8HPeQXw' },
+	  { src: 'hebimg/שיר 6 פילוסופי.jpeg', title: 'פילוסופי', youtube: 'https://www.youtube.com/watch?v=rxJs23JhkJk' },
+	  { src: 'hebimg/שיר 7 מטעני נפש.jpeg', title: 'מטעני נפש', youtube: 'https://www.youtube.com/watch?v=SqmP-RugiaA' },
+	  { src: 'hebimg/שיר 8 געגוע.jpeg', title: 'געגוע', youtube: 'https://www.youtube.com/watch?v=AuBYHt3SVRQ' },
+	  { src: 'hebimg/שיר 9 על הקצה.jpeg', title: 'על הקצה', youtube: 'https://www.youtube.com/watch?v=uBxgQCTZWiI' },
+	  { src: 'hebimg/שיר 10 עיניים.jpeg', title: 'עיניים', youtube: 'https://www.youtube.com/watch?v=KcRHRN410pg' },
+	  { src: 'hebimg/שיר 11 נפש אחת.jpeg', title: 'נפש אחת', youtube: 'https://www.youtube.com/watch?v=qZKBuhphuwM' },
+	  { src: 'hebimg/שיר 12 היום אתה מלאך.jpeg', title: 'היום אתה מלאך', youtube: 'https://www.youtube.com/watch?v=kLQ-6d9eyng' },
+	  { src: 'hebimg/שיר 13 שיחות נפש.jpeg', title: 'שיחות נפש', youtube: 'https://www.youtube.com/watch?v=ER0vo-Ut_xs' },
+	  { src: 'hebimg/שיר 14 פוסט תמונה.jpeg', title: 'פוסט תמונה', youtube: 'https://www.youtube.com/watch?v=foM7Zdp0q70' },
+	  { src: 'hebimg/שיר 15 נמר סגול.jpeg', title: 'נמר סגול', youtube: 'https://www.youtube.com/watch?v=j-k6BIihbHI' },
+	 ];
 
-// ---- אלמנטים ----
-const galleryEl = document.getElementById('gallery');
-const lb = document.getElementById('lightbox');
-const lbImg = document.getElementById('lbImg');
-const lbTitle = document.getElementById('lbTitle');
-const lbYoutube = document.getElementById('lbYoutube');
-const lbDownload = document.getElementById('lbDownload');
-const lbClose = document.getElementById('lbClose');
-const lbPrev = document.getElementById('lbPrev');
-const lbNext = document.getElementById('lbNext');
-const lbShare = document.getElementById('lbShare');
-const lbFullscreen = document.getElementById('lbFullscreen');
+    const gallery = document.getElementById('gallery');
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbYoutube = document.getElementById('lbYoutube');
+    const lbClose = document.getElementById('lbClose');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
 
-let currentIndex = 0;
-let touchStartX = null;
+    let currentIndex = 0;
+    let pinchScale = 1; // מצב הזום הנוכחי
+    let startDistance = 0;
 
-// ---- בניית הגלריה עם כותרת וקישור יוטיוב מתחת לכל תמונה ----
-IMAGES.forEach((it, i) => {
-  const fig = document.createElement('figure');
-  fig.className = 'card';
+    // יצירת הגלריה - שתי תמונות בכל שורה תמיד
+    IMAGES.forEach((it, i) => {
+      const el = document.createElement('div');
+      el.className = 'gallery-item';
+      el.innerHTML = `
+        <img src="${it.src}" alt="${it.title}" data-index="${i}">
+        <div class="title">${it.title || ''}</div>
+        ${it.youtube ? `<a class="yt" href="${it.youtube}" target="_blank">🎵 צפה ביוטיוב</a>` : ''}
+      `;
+      gallery.appendChild(el);
+    });
 
-  const a = document.createElement('a');
-  a.href = `#view/${i}`;
-  a.className = 'thumb';
-  const img = document.createElement('img');
-  img.loading = 'lazy';
-  img.src = it.src;
-  img.alt = it.title || `תמונה ${i+1}`;
-  a.appendChild(img);
+    // לחיצה על תמונה פותחת את ה-lightbox
+    gallery.addEventListener('click', e => {
+      const img = e.target.closest('img');
+      if (!img) return;
+      currentIndex = parseInt(img.dataset.index, 10);
+      openLightbox(currentIndex);
+    });
 
-  const figcap = document.createElement('figcaption');
-  figcap.className = 'caption';
-  const title = document.createElement('div');
-  title.textContent = it.title || '';
-  figcap.appendChild(title);
+    function openLightbox(idx) {
+      currentIndex = idx;
+      const item = IMAGES[currentIndex];
+      lbImg.src = item.src;
+      lbTitle.textContent = item.title || '';
+      if (item.youtube) { lbYoutube.href = item.youtube; lbYoutube.style.display = 'inline-block'; lbYoutube.textContent = '🎵 מעבר ליוטיוב'; }
+      else { lbYoutube.style.display = 'none'; lbYoutube.href = '#'; lbYoutube.textContent = ''; }
 
-  if (it.youtube) {
-    const y = document.createElement('a');
-    y.href = it.youtube;
-    y.target = '_blank';
-    y.rel = 'noopener';
-    y.className = 'ytlink';
-    y.textContent = 'נגן שיר';
-    figcap.appendChild(y);
-  }
+      // איפוס זום
+      pinchScale = 1; lbImg.style.transform = 'scale(1)';
 
-  fig.appendChild(a);
-  fig.appendChild(figcap);
-  galleryEl.appendChild(fig);
+      lightbox.classList.add('show');
+      lightbox.setAttribute('aria-hidden', 'false');
+      history.replaceState(null, '', '#view/' + currentIndex);
 
-  // אירוע פתיחה
-  a.addEventListener('click', e => { e.preventDefault(); openLightbox(i); });
-});
-
-// ---- פונקציות lightbox ----
-function openLightbox(idx, push=true){
-  currentIndex = ((idx % IMAGES.length) + IMAGES.length) % IMAGES.length;
-  const item = IMAGES[currentIndex];
-  lbImg.src = item.src;
-  lbImg.alt = item.title || `תמונה ${currentIndex+1}`;
-  lbTitle.textContent = item.title || '';
-
-  if (item.youtube) { lbYoutube.href = item.youtube; lbYoutube.style.display = 'inline-block'; }
-  else { lbYoutube.style.display = 'none'; lbYoutube.href = '#'; }
-
-  // download: השתדל ליצר אובייקט blob (CORS עשוי לחסום) — ננסה ב־fetch ואז נפנה ללשונית אם נכשל
-  lbDownload.onclick = async (e) => {
-    e.preventDefault();
-    try {
-      const resp = await fetch(item.src, { mode: 'cors' });
-      if (!resp.ok) throw new Error('network');
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `image-${currentIndex+1}.jpg`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      // fallback: פתח בתב/חלון חדש
-      window.open(item.src, '_blank');
+      // preload
+      preload((currentIndex + 1) % IMAGES.length);
+      preload((currentIndex - 1 + IMAGES.length) % IMAGES.length);
     }
-  };
 
-  // עדכון כפתור שיתוף
-  lbShare.onclick = async () => {
-    const shareUrl = item.youtube || (location.origin + location.pathname + `#view/${currentIndex}`);
-    const shareData = { title: item.title || 'תמונה', text: item.title || '', url: shareUrl };
-    if (navigator.share) {
-      try { await navigator.share(shareData); } catch (err) { console.log('share canceled'); }
-    } else if (navigator.clipboard) {
-      await navigator.clipboard.writeText(shareUrl);
-      alert('הקישור הועתק ללוח');
-    } else {
-      prompt('העתק את הקישור', shareUrl);
+    function closeLightbox() {
+      lightbox.classList.remove('show');
+      lightbox.setAttribute('aria-hidden', 'true');
+      history.replaceState(null, '', location.pathname);
     }
-  };
 
-  // שמירת מיקום אחרון
-  try { localStorage.setItem('lastIndex', currentIndex); } catch(e){}
+    lbClose.addEventListener('click', closeLightbox);
+    lbPrev.addEventListener('click', () => { navigate(-1); });
+    lbNext.addEventListener('click', () => { navigate(1); });
 
-  // היסטוריה/hash
-  if (push) history.replaceState(null, '', '#view/' + currentIndex);
-  lb.classList.add('show');
-  lb.setAttribute('aria-hidden', 'false');
-
-  // טעינה מוקדמת
-  preload((currentIndex+1)%IMAGES.length);
-  preload((currentIndex-1+IMAGES.length)%IMAGES.length);
-}
-
-function closeLightbox(){
-  lb.classList.remove('show');
-  lb.setAttribute('aria-hidden', 'true');
-  history.replaceState(null, '', location.pathname);
-}
-
-function prev() { openLightbox(currentIndex-1); }
-function next() { openLightbox(currentIndex+1); }
-
-function preload(i){ const im = new Image(); im.src = IMAGES[i].src; }
-
-// ---- אירועים ----
-lbClose.addEventListener('click', closeLightbox);
-lbPrev.addEventListener('click', prev);
-lbNext.addEventListener('click', next);
-
-// מקלדת
-addEventListener('keydown', e => {
-  if (!lb.classList.contains('show')) return;
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowRight') next();
-  if (e.key === 'ArrowLeft') prev();
-});
-
-// מגע (swipe)
-lb.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-lb.addEventListener('touchend', e => {
-  if (touchStartX === null) return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
-  touchStartX = null;
-}, { passive: true });
-
-// מסך מלא
-lbFullscreen.addEventListener('click', () => {
-  if (!document.fullscreenElement) {
-    lb.requestFullscreen().catch(() => {});
-  } else {
-    document.exitFullscreen().catch(()=>{});
-  }
-});
-
-// double tap/dblclick למובייל/דסקטופ
-lbImg.addEventListener('dblclick', () => {
-  if (!document.fullscreenElement) lb.requestFullscreen().catch(()=>{});
-  else document.exitFullscreen().catch(()=>{});
-});
-
-// תמיכה ב־hash בעת טעינה
-window.addEventListener('load', () => {
-  // חשיפה של #view/N
-  const m = location.hash.match(/#view\/(\d+)/);
-  if (m) {
-    const i = parseInt(m[1]);
-    if (!isNaN(i) && IMAGES[i]) openLightbox(i, false);
-    return;
-  }
-  // נסה לשחזר מ־localStorage
-  try{
-    const last = parseInt(localStorage.getItem('lastIndex'));
-    if (!isNaN(last) && IMAGES[last]) {
-      // לא לפתוח אוטומטית — רק לשמור אינדקס (אפשר לשנות)
-      // openLightbox(last, false);
+    function navigate(dir) {
+      currentIndex = (currentIndex + dir + IMAGES.length) % IMAGES.length;
+      openLightbox(currentIndex);
     }
-  } catch(e){}
-});
 
-// נווט באמצעות לחיצה על קישורי gallery (התנהגות רגילה)
-// כבר מטופל כאשר יצרנו את ה־click על כל thumb
+    // מקשים
+    addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('show')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') navigate(1);
+      if (e.key === 'ArrowLeft') navigate(-1);
+    });
 
-</script>
+    // מגע - pinch to zoom
+    lbImg.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        startDistance = getDistance(e.touches[0], e.touches[1]);
+      }
+    }, { passive: true });
+
+    lbImg.addEventListener('touchmove', e => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        const d = getDistance(e.touches[0], e.touches[1]);
+        const scale = d / startDistance;
+        lbImg.style.transform = `scale(${Math.max(1, Math.min(4, pinchScale * scale))})`;
+      }
+    }, { passive: false });
+
+    lbImg.addEventListener('touchend', e => {
+      if (e.touches.length < 2) {
+        // עדכון ה-scale לאחר סיום
+        const m = lbImg.style.transform.match(/scale\(([^)]+)\)/);
+        pinchScale = m ? parseFloat(m[1]) : 1;
+        // גבולות
+        pinchScale = Math.max(1, Math.min(4, pinchScale));
+        lbImg.style.transform = `scale(${pinchScale})`;
+      }
+    });
+
+    function getDistance(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+
+    function preload(i) { const p = new Image(); p.src = IMAGES[i].src; }
+
+    // טעינת hash בהתחלה
+    window.addEventListener('load', () => {
+      const m = location.hash.match(/#view\/(\d+)/);
+      if (m) {
+        const i = parseInt(m[1], 10);
+        if (!isNaN(i) && IMAGES[i]) openLightbox(i);
+      }
+    });
+  </script>
 </body>
 </html>
 
