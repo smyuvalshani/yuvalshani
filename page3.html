@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="he">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title></title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, sans-serif;
+      background: #f8f9fa;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    @media (max-width: 700px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    img {
+      width: 50%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      cursor: pointer;
+      display: block;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 10px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+   <header>
+	
+      <h1><center>אופרת נפש צומת עד הלו•ם</center></h1>
+      <h2><a href='start.html'>חזרה לעמוד ראשי</a></h2>
+    </header>
+   <div class="container" id="gallery"></div>
+
+  <script>
+    const videos = [
+      { youtube: 'https://youtu.be/OlS59IHiBt0?si=BBnxEhjMaQddCQVb', title: 'עד הלום - כתוביות', image: 'download.png' },
+      { youtube: 'https://youtu.be/zTLzmDjzK3Q?si=p7BYXc41QEZxW1yn', title: 'עד הלום 5', image: 'download.png' },
+      { youtube: 'https://youtu.be/LJnYTp4mplg?si=MPIsKZgYs5qWJ53p', title: 'עד הלום 4', image: 'download.png' },
+      { youtube: 'https://youtu.be/tTfPjXJ7BAA?si=GSNzDrFEiMcupd0a', title: 'עד הלום 3', image: 'download.png' },
+      { youtube: 'https://youtu.be/iPFcFLhuXDs?si=SlKBsr_lv_Aj4KZN', title: 'עד הלום 2', image: 'download.png' },
+      { youtube: 'https://youtu.be/fvbkoYclTdI?si=rwIcIns3Gc-Z_C3U', title: 'עד הלום 1', image: 'download.png' },
+    ];
+
+    const container = document.getElementById('gallery');
+
+    videos.forEach(video => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const img = document.createElement('img');
+	  if (video.image!='')
+		img.src = video.image;
+	  else
+	    img.src = video.youtube + "/hqdefault.jpg";
+      img.alt = video.title;
+      img.onclick = () => window.open(video.youtube, '_blank');
+
+      const title = document.createElement('h3');
+      title.textContent = video.title;
+
+      card.appendChild(img);
+      card.appendChild(title);
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>

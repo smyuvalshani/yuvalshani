@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="he">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title></title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, sans-serif;
+      background: #f8f9fa;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    @media (max-width: 700px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    img {
+      width: 50%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      cursor: pointer;
+      display: block;
+    }
+    h3 {
+      font-size: 16px;
+      margin: 10px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+   <header>
+	
+      <h1><center>הצגות בית הלוחם<br> תיאטרון נכי צה''ל</center></h1>
+      <h2><a href='start.html'>חזרה לעמוד ראשי</a></h2>
+    </header>
+   <div class="container" id="gallery"></div>
+
+  <script>
+    const videos = [
+      { youtube: 'https://youtube.com/shorts/_UK5D8DmawE?si=ALJu-p_vJamRTin-', title: 'סרט 1 ראשון באוקטובר', image: 'download.png' },
+      { youtube: 'https://youtube.com/shorts/0qmOfYKCKIo?si=vjg8nbVFC7Qf6MUn', title: 'סרט 2 ראשון באוקטובר', image: 'download.png' },
+      { youtube: 'https://youtube.com/shorts/rJ41U0yqtr4?si=oHyj3u2RFxyLbeNq', title: 'סרט 3 ראשון באוקטובר', image: 'download.png' },
+      { youtube: 'https://youtube.com/shorts/17lIQ_pkwOo?si=xhIECRwONr_DQ2ma', title: 'סרט 4 ראשון באוקטובר', image: 'download.png' },
+      { youtube: 'https://youtube.com/shorts/8Y1t7p0DIx8?si=oOqFPK_QL-Z_oiWH', title: 'סרט 5 ראשון באוקטובר', image: 'download.png' },
+      { youtube: 'https://youtu.be/dPwOMBswrlE?si=LmVr9-X93VgL1zbj', title: 'סרט 6 ראשון באוקטובר', image: 'download.png' },
+      { youtube: 'https://youtu.be/gky9VxEvhIk?si=NJoQwOX2sxdTKorX', title: 'סרט 7 ראשון באוקטובר', image: 'download.png' },
+    ];
+
+    const container = document.getElementById('gallery');
+
+    videos.forEach(video => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const img = document.createElement('img');
+	  if (video.image!='')
+		img.src = video.image;
+	  else
+	    img.src = video.youtube + "/hqdefault.jpg";
+      img.alt = video.title;
+      img.onclick = () => window.open(video.youtube, '_blank');
+
+      const title = document.createElement('h3');
+      title.textContent = video.title;
+
+      card.appendChild(img);
+      card.appendChild(title);
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
